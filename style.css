@@ -1,0 +1,30 @@
+body {
+    background-color: rgb(196, 193, 193);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+h1{
+    text-align: center;
+}
+.quote {
+    margin-bottom: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+}
+
+.quote img{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin:auto;
+    display:block;
+    margin-top: 20px;
+    border-radius: 50%;
+}
+
+.quote figcaption{
+    text-align: right;
+    margin-right: 50px;
+}

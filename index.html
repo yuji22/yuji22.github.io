@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Dyslexia Simulator</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<h1>Dyslexia Simulator</h1>
+	<figure class="quote">
+		<blockquote>Nobody knows what another person is thinking. They may imagine they do, but they are nearly always wrong.</blockquote>
+		<figcaption><b>- Agatha Christie,</b> <cite>The Mysterious Mr. Quin</cite></figcaption>
+		<img src="agatha.jpeg">
+	</figure>
+	<figure class="quote">
+		<blockquote>I don't think human beings learn anything without desperation. Desperation is a necessary ingredient to learning anything or creating anything. Period. If you ain't desperate at some point, you ain't interesting.</blockquote>
+		<figcaption><b>- Jim Carrey</b> </figcaption>
+		<img src="Jim-Carrey.jpeg">
+	</figure>	<figure class="quote">
+		<blockquote>You cannot live to please everyone else. You have to edify, educate and fulfill your own dreams and destiny, and hope that whatever your art is that you're putting out there, if it's received, great, I respect you for receiving it. If it's not received, great, I respect you for not.</blockquote>
+		<figcaption><b>- Octavia Spencer </b></figcaption>
+		<img src="octavia.jpg">
+
+	</figure>
+	<p></p>
+	
+	<script type="text/javascript">
+		
+		$(function () {
+			var getTextNodesIn = function (el) {
+				return $(el).find(":not(iframe,script)").addBack().contents().filter(function () {
+					return this.nodeType == 3;
+				});
+			}; 
+			var textNodes = getTextNodesIn($(".quote")); 
+			//var textNodes = getTextNodesIn($("*")); 
+			function isLetter(char) {
+				return /^[\d]$/.test(char);
+			}
+			var wordsInTextNodes = [];
+			for (var i = 0; i < textNodes.length; i++) {
+				var node = textNodes[i];
+				var words = []
+				var re = /\w+/g;
+				var match;
+				while ((match = re.exec(node.nodeValue)) != null) {
+					var word = match[0];
+					var position = match.index;
+					words.push({
+						length: word.length,
+						position: position
+					});
+				}
+				wordsInTextNodes[i] = words;
+			};
+
+			function messUpWords() {
+				for (var i = 0; i < textNodes.length; i++) {
+					var node = textNodes[i];
+					for (var j = 0; j < wordsInTextNodes[i]
+						.length; j++) { // Only change a tenth of the words each round. 
+						if (Math.random() > 1 / 10) {
+							continue;
+						}
+						var wordMeta = wordsInTextNodes[i][j];
+						var word = node.nodeValue.slice(wordMeta.position, wordMeta.position + wordMeta.length);
+						var before = node.nodeValue.slice(0, wordMeta.position);
+						var after = node.nodeValue.slice(wordMeta.position + wordMeta.length);
+						node.nodeValue = before + messUpWord(word) + after;
+					};
+				};
+			}
+
+			function messUpWord(word) {
+				if (word.length < 3) {
+					return word;
+				}
+				return word[0] + messUpMessyPart(word.slice(1, -1)) + word[word.length - 1];
+			}
+
+			function messUpMessyPart(messyPart) {
+				if (messyPart.length < 2) {
+					return messyPart;
+				}
+				var a, b;
+				while (!(a < b)) {
+					a = getRandomInt(0, messyPart.length - 1);
+					b = getRandomInt(0, messyPart.length - 1);
+				}
+				return messyPart.slice(0, a) + messyPart[b] + messyPart.slice(a + 1, b) + messyPart[a] + messyPart
+					.slice(b + 1);
+			} // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random 
+			function getRandomInt(min, max) {
+				return Math.floor(Math.random() * (max - min + 1) + min);
+			}
+			setInterval(messUpWords, 50);
+		});
+	</script>
+</body>
+
+</html>
